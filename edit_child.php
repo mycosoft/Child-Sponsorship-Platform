@@ -5,7 +5,7 @@ $username = "u730763858_sponsor";
 $password = "0773196657Myco";
 $dbname = "u730763858_sponsor";
 
-// Create a reusable function to establish a database connection
+
 function connectToDatabase() {
     global $servername, $username, $password, $dbname;
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     $age = $_POST['age'];
     $biography = $_POST['biography'];
 
-    // Use prepared statements to prevent SQL injection
+   
     $stmt = $conn->prepare("UPDATE children SET name=?, age=?, biography=? WHERE id=?");
     $stmt->bind_param("sisi", $name, $age, $biography, $childId);
 
