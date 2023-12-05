@@ -9,7 +9,7 @@
     
       <script>
         function redirectToFlutterwave(childName, childId) {
-            // Define the Flutterwave donation URL with the required parameters
+           
             var flutterwaveURL = 'https://flutterwave.com/donate/wasn4of7gwub?child_name=' + encodeURIComponent(childName) + '&child_id=' + childId;
 
             // Open a new window with the Flutterwave donation URL
