@@ -1,5 +1,5 @@
 function sponsorChild(childId) {
-    // Use AJAX to send the child ID to the PHP script for sponsorship handling
+  
     $.ajax({
         type: 'POST',
         url: 'sponsorship.php',
