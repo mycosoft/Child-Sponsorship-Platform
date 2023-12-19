@@ -6,25 +6,44 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
     <title>Sponsor Form</title>
-    
-      <script>
+
+    <script>
         function redirectToFlutterwave(childName, childId) {
-           
-            var flutterwaveURL = 'https://flutterwave.com/donate/wasn4of7gwub?child_name=' + encodeURIComponent(childName) + '&child_id=' + childId;
+            // Perform client-side validation
+            if (validateForm()) {
+                // Define the Flutterwave donation URL with the required parameters
+                var flutterwaveURL = 'https://flutterwave.com/donate/wasn4of7gwub?child_name=' + encodeURIComponent(childName) + '&child_id=' + childId;
 
-            // Open a new window with the Flutterwave donation URL
-            window.open(flutterwaveURL, '_blank');
+                // Open a new window with the Flutterwave donation URL
+                window.open(flutterwaveURL, '_blank');
+            }
         }
-    </script>
 
-    
-</head>
-<body class="bg-light" style="background-color: #f3f0e9 !important;">
-    <div class="container mt-4">
-        <h4 class="text-center mb-4 mt-5">Thank you for choosing to sponsor</h4>
-  <!-- Child Information Card -->
- <div class="card mb-4 text-center col-md-6 mx-auto"> <!-- Adjusted width -->
-    <div class="card-body text-center">
+        function validateForm() {
+            // Validate the form before proceeding
+            var isValid = true;
+
+            // Validate Contact Information
+            var firstName = document.getElementById('firstName').value.trim();
+            var lastName = document.getElementById('lastName').value.trim();
+            var email = document.getElementById('email').value.trim();
+
+            if (firstName === '' || lastName === '' || email === '') {
+                alert('Please fill in all contact information fields.');
+                isValid = false;
+            }
+
+            // Add additional validations for Mailing Address if needed
+
+            return isValid;
+        }
+        </script>
+    <body class="bg-light" style="background-color: #f3f0e9 !important;">
+        <div class="container mt-4">
+            <h4 class="text-center mb-4 mt-5">Thank you for choosing to sponsor</h4>
+      <!-- Child Information Card -->
+     <div class="card mb-4 text-center col-md-6 mx-auto"> <!-- Adjusted width -->
+        <div class="card-body text-center">
         <?php
         // Retrieve the selected child's name from the query parameter
         $selectedChildName = htmlspecialchars($_GET['childName']);

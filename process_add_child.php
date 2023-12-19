@@ -15,7 +15,8 @@ if ($conn->connect_error) {
 // Get form data
 $name = $_POST['name'];
 $age = $_POST['age'];
-$biography = $_POST['biography']; // Add this line to retrieve biography
+$biography = $_POST['biography'];
+$location = $_POST['location'];  // Added location field
 
 // File upload handling
 $targetDir = "uploads/";
@@ -23,13 +24,11 @@ $targetFile = $targetDir . basename($_FILES["image"]["name"]);
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-// Check if image file is a valid image
-if (isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["image"]["tmp_name"]);
-    if ($check === false) {
-        echo "File is not an image.";
-        $uploadOk = 0;
-    }
+// Check if file is an image
+$check = getimagesize($_FILES["image"]["tmp_name"]);
+if ($check === false) {
+    echo "File is not an image.";
+    $uploadOk = 0;
 }
 
 // Check if file already exists
@@ -44,10 +43,9 @@ if ($_FILES["image"]["size"] > 500000) {
     $uploadOk = 0;
 }
 
-$imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
 // Allow certain file formats
-if (!in_array($imageFileType, array("jpg", "jpeg", "png", "gif"))) {
+$allowedFormats = array("jpg", "jpeg", "png", "gif");
+if (!in_array($imageFileType, $allowedFormats)) {
     echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
     $uploadOk = 0;
 }
@@ -60,15 +58,18 @@ if ($uploadOk == 0) {
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
         echo "The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.";
 
-        // Insert new child into the database with biography
-        $imageFilename = basename($_FILES["image"]["name"]);
-        $sql = "INSERT INTO children (name, age, image, biography) VALUES ('$name', $age, '$imageFilename', '$biography')";
-        if ($conn->query($sql) === TRUE) {
+        // Insert new child into the database with biography and location using prepared statement
+                $stmt = $conn->prepare("INSERT INTO children (name, age, image, biography, location) VALUES (?, ?, ?, ?, ?)");
+                $stmt->bind_param("sisss", $name, $age, $imageFileType, $biography, $location);
+
+        
+        if ($stmt->execute()) {
             echo " Child added successfully!";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $stmt->error;
         }
 
+        $stmt->close();
     } else {
         echo "Sorry, there was an error uploading your file.";
     }
